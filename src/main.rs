@@ -1,13 +1,18 @@
 use std::{
     error::Error,
     fs::{read, read_dir, write},
-    path::PathBuf,
+    path::{Path, PathBuf},
 };
 
 use time::OffsetDateTime;
 
 fn main() -> Result<(), Box<dyn Error>> {
-    let latest = latest();
+    let mut path = PathBuf::from(std::env::var("IPSW_DIR").unwrap_or_else(|e| {
+        eprintln!("{}", e);
+        "./".to_string()
+    }));
+
+    let latest = latest(&path);
     let new = reqwest::blocking::get(
         "https://mesu.apple.com/assets/macos/com_apple_macOSIPSW/com_apple_macOSIPSW.xml",
     )?
@@ -20,17 +25,14 @@ fn main() -> Result<(), Box<dyn Error>> {
         }
     }
 
-    write(
-        format!("ipsw-{}.xml", OffsetDateTime::now_utc().date()),
-        new,
-    )?;
+    path.push(format!("ipsw-{}.xml", OffsetDateTime::now_utc().date()));
+
+    write(path, new)?;
 
     Ok(())
 }
 
-fn latest() -> Option<PathBuf> {
-    let path = std::env::var("IPSW_DIR").unwrap_or_else(|_| "./".to_string());
-
+fn latest(path: &Path) -> Option<PathBuf> {
     let mut paths = read_dir(path)
         .unwrap()
         .filter_map(|v| v.ok())
