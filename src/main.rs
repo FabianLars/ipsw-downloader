@@ -29,7 +29,7 @@ fn main() -> Result<(), Box<dyn Error>> {
 }
 
 fn latest() -> Option<PathBuf> {
-    let path = std::env::var("MESU_DIR").unwrap_or_else(|_| "./".to_string());
+    let path = std::env::var("IPSW_DIR").unwrap_or_else(|_| "./".to_string());
 
     let mut paths = read_dir(path)
         .unwrap()
