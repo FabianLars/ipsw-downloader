@@ -4,13 +4,15 @@
     "lockFileMaintenance": {
         "enabled": true,
         "automerge": true,
-        "automergeType": "branch"
+        "automergeType": "branch",
+        "ignoreTests": true
     },
     "packageRules": [
         {
             "automerge": true,
             "automergeType": "branch",
-            "matchUpdateTypes": ["patch", "pin", "digest"]
+            "matchUpdateTypes": ["patch", "pin", "digest"],
+            "ignoreTests": true
         },
         {
             "automerge": true,
